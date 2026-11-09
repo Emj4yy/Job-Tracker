@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="A simple, private job application tracker. Everything is saved on your own device. No sign-up needed.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#8b0000">
+  <title>Job Tracker</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💼</text></svg>">
+
+  <!-- Apply the saved or system theme before first paint to avoid a flash of the wrong theme. -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('job-tracker-theme'); } catch (e) { /* storage blocked */ }
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- If the app fails to load, show a friendly error instead of an endless spinner. -->
+  <script type="module" src="js/main.js"
+    onerror="document.getElementById('boot-view').hidden = true; document.getElementById('boot-error').hidden = false;"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand">💼 Job Tracker</h1>
+      <button id="theme-toggle" class="btn btn-header btn-icon" type="button" aria-label="Switch to dark mode">
+        <svg class="icon icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <svg class="icon icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+          <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4.5" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </g>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="container" tabindex="-1">
+
+    <!-- Shown until js/main.js starts -->
+    <section id="boot-view" class="state-panel" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p>Loading…</p>
+    </section>
+
+    <!-- Shown only if js/main.js could not be downloaded -->
+    <section id="boot-error" class="state-panel state-error" role="alert" hidden>
+      <h2>Couldn't load the app</h2>
+      <p>Please check your internet connection and refresh the page.</p>
+    </section>
+
+    <section id="app-view" aria-labelledby="app-title" hidden>
+      <div class="app-heading">
+        <div>
+          <h2 id="app-title">My Job Applications</h2>
+          <p id="job-count" class="muted"></p>
+        </div>
+        <button id="add-job-btn" class="btn btn-primary" type="button">+ Add application</button>
+      </div>
+
+      <!-- Dashboard summary -->
+      <ul id="stats" class="stats" aria-label="Summary" hidden></ul>
+
+      <!-- Only shown when a backup is overdue -->
+      <div id="backup-reminder" class="reminder" hidden>
+        <p>💾 Download a backup so you don't lose your list if this browser's data gets cleared.</p>
+        <button id="reminder-backup-btn" class="btn btn-secondary btn-sm" type="button">Download backup</button>
+      </div>
+
+      <div id="jobs-error" class="state-panel state-error" role="alert" hidden>
+        <p id="jobs-error-text"></p>
+        <button id="retry-btn" class="btn btn-secondary" type="button">Try again</button>
+      </div>
+
+      <!-- First visit -->
+      <div id="jobs-empty" class="welcome" hidden>
+        <p class="welcome-icon" aria-hidden="true">📋</p>
+        <h3>Start tracking your job hunt</h3>
+        <p class="muted">Add each job you apply to, then update its status as you hear back.</p>
+        <button id="empty-add-btn" class="btn btn-primary" type="button">+ Add your first application</button>
+      </div>
+
+      <div id="jobs-area" hidden>
+        <div class="filters">
+          <label for="search-input" class="visually-hidden">Search by company or role</label>
+          <input id="search-input" class="search" type="search" placeholder="Search company or role" autocomplete="off">
+          <ul id="status-chips" class="chips" aria-label="Show applications by status"></ul>
+        </div>
+
+        <p id="filter-info" class="filter-info" hidden>
+          <span id="filter-count"></span>
+          <button id="clear-filters-btn" class="link-btn" type="button">Show all</button>
+        </p>
+
+        <!-- Laptops and desktops: spreadsheet-style table -->
+        <div class="table-wrap">
+          <table class="job-table">
+            <caption class="visually-hidden">Job applications. Select a company to edit.</caption>
+            <thead>
+              <tr>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1" /></svg>Company</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>Role</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>Status</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10" /></svg>Setup</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>Location</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /></svg>Salary</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" /></svg>Applied</th>
+                <th scope="col"><svg class="th-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></svg>Link</th>
+              </tr>
+            </thead>
+            <tbody id="job-tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8"><button id="table-add-btn" class="add-row-btn" type="button">+ Add application</button></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Phones and tablets: cards -->
+        <ul id="job-list" class="job-list" aria-label="Job applications"></ul>
+
+        <p id="jobs-no-results" class="state-panel muted" hidden>No applications match.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="app-footer" class="container app-footer" hidden>
+    <p id="backup-note"></p>
+    <p>
+      <button id="export-btn" class="link-btn" type="button">Download backup</button>
+      <span aria-hidden="true">·</span>
+      <button id="import-btn" class="link-btn" type="button">Restore backup</button>
+    </p>
+    <input id="import-input" type="file" accept=".csv,text/csv" hidden>
+  </footer>
+
+  <!-- Short confirmations pop up here, then fade -->
+  <p id="toast" class="toast" role="status" aria-live="polite"></p>
+
+  <!-- ===================== Add / edit dialog ===================== -->
+  <dialog id="job-dialog" class="dialog" aria-labelledby="job-dialog-title">
+    <form id="job-form" novalidate>
+      <div class="dialog-header">
+        <h2 id="job-dialog-title">Add job</h2>
+        <button class="btn btn-ghost btn-icon" type="button" data-close aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="dialog-body">
+        <p id="job-form-message" class="message" role="alert"></p>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="job-company">Company <span class="required" aria-hidden="true">*</span></label>
+            <input id="job-company" name="company" type="text" maxlength="200" required
+              autocomplete="organization" placeholder="e.g. Acme Inc." aria-describedby="job-company-error">
+            <p id="job-company-error" class="field-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="job-role">Role <span class="required" aria-hidden="true">*</span></label>
+            <input id="job-role" name="role" type="text" maxlength="200" required
+              autocomplete="off" placeholder="e.g. Customer Support" aria-describedby="job-role-error">
+            <p id="job-role-error" class="field-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="job-status">Status</label>
+            <select id="job-status" name="status" aria-describedby="job-status-hint"></select>
+            <p id="job-status-hint" class="field-hint"></p>
+          </div>
+
+          <div class="field">
+            <label for="job-date">Date applied</label>
+            <input id="job-date" name="date_applied" type="date">
+          </div>
+        </div>
+
+        <details id="job-more" class="form-more">
+          <summary>More details <span class="muted">(optional)</span></summary>
+          <div class="form-grid">
+            <div class="field">
+              <label for="job-setup">Work setup</label>
+              <select id="job-setup" name="work_setup">
+                <option value="">Not specified</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="job-location">Location</label>
+              <input id="job-location" name="location" type="text" maxlength="200" placeholder="e.g. Makati City">
+            </div>
+
+            <div class="field">
+              <label for="job-salary">Salary</label>
+              <input id="job-salary" name="salary_range" type="text" maxlength="100" placeholder="e.g. ₱30k–40k / month">
+            </div>
+
+            <div class="field">
+              <label for="job-link">Link to the job post</label>
+              <input id="job-link" name="job_link" type="url" maxlength="2048" inputmode="url"
+                placeholder="https://" aria-describedby="job-link-error">
+              <p id="job-link-error" class="field-error" hidden></p>
+            </div>
+
+            <div class="field field-full">
+              <label for="job-notes">Notes</label>
+              <textarea id="job-notes" name="notes" rows="3" maxlength="5000"
+                placeholder="e.g. Interviewer's name, next steps"></textarea>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="dialog-footer">
+        <button id="job-delete-btn" class="btn btn-danger-ghost" type="button" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+        <button id="job-submit" class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===================== Delete confirmation ===================== -->
+  <dialog id="delete-dialog" class="dialog dialog-small" role="alertdialog"
+    aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-text">
+    <div class="dialog-body">
+      <h2 id="delete-dialog-title">Delete application?</h2>
+      <p id="delete-dialog-text">
+        This will permanently delete <strong id="delete-job-name"></strong>. This can't be undone.
+      </p>
+      <p id="delete-message" class="message" role="alert"></p>
+    </div>
+    <div class="dialog-footer">
+      <span class="spacer"></span>
+      <button class="btn btn-secondary" type="button" data-close>Cancel</button>
+      <button id="delete-confirm-btn" class="btn btn-danger" type="button">Delete</button>
+    </div>
+  </dialog>
+</body>
+</html>

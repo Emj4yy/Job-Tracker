@@ -1,0 +1,1123 @@
+/* =============================================================
+   Job Tracker - styles
+   Palette: dark red #8b0000, red #d62839, light red #ff4d4d,
+   light pink #ffe5e5, neutral grays and white.
+   ============================================================= */
+
+/* ---------- Design tokens: light mode (default) ---------- */
+:root {
+  --red-900: #8b0000;
+  --red-600: #d62839;
+  --red-400: #ff4d4d;
+  --pink-100: #ffe5e5;
+
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f5;
+  --border: #e1e4e8;
+  --border-strong: #c9ced6;
+  --text: #1f2328;
+  --text-muted: #5b6370;
+  --accent: var(--red-900);
+
+  --primary: var(--red-600);
+  --primary-hover: var(--red-900);
+  --on-primary: #ffffff;
+  --focus: var(--red-900);
+
+  --header-bg: var(--red-900);
+  --header-text: #ffffff;
+
+  --error-text: var(--red-900);
+  --error-bg: var(--pink-100);
+  --warn-text: #7a4b00;
+  --warn-bg: #fff4d6;
+  --toast-bg: #1f2328;
+  --toast-text: #ffffff;
+
+  /* Status colors, based on the original spreadsheet. Same in light and dark mode so
+     each status is instantly recognizable. Every text/background pair meets WCAG AA 4.5:1. */
+  --wishlist-bg: #dbeafe;
+  --wishlist-text: #1e3a8a;
+  --waiting-bg: #fff2a8;
+  --waiting-text: #4d3b00;
+  --interviewing-bg: #f5b52e;
+  --interviewing-text: #2e1f00;
+  --accepted-bg: #15803d;
+  --accepted-text: #ffffff;
+  --rejected-bg: var(--red-900);
+  --rejected-text: #ffffff;
+  --withdrawn-bg: #ffc9c2;
+  --withdrawn-text: #6b1308;
+  --ghosted-bg: #d4d4d8;
+  --ghosted-text: #27272a;
+
+  /* Work setup colors (also from the spreadsheet), shown as solid blocks */
+  --onsite-bg: #0b78b8;
+  --onsite-text: #ffffff;
+  --hybrid-bg: #7030a0;
+  --hybrid-text: #ffffff;
+  --remote-bg: #15803d;
+  --remote-text: #ffffff;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgb(16 24 40 / 5%);
+  --shadow-lg: 0 12px 32px rgb(16 24 40 / 22%);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  color-scheme: light;
+}
+
+/* ---------- Dark mode tokens ---------- */
+/* Fallback for the system setting (used only if the theme script could not run) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121214;
+    --surface: #1c1c21;
+    --surface-2: #26262c;
+    --border: #2f2f37;
+    --border-strong: #45454f;
+    --text: #ececf1;
+    --text-muted: #a9abb5;
+    --accent: var(--red-400);
+    --focus: var(--red-400);
+    --header-bg: #1c0505;
+    --error-text: #ff9a9a;
+    --error-bg: rgb(214 40 57 / 18%);
+    --warn-text: #ffd27a;
+    --warn-bg: rgb(245 181 46 / 14%);
+    --toast-bg: #ececf1;
+    --toast-text: #121214;
+    --shadow: 0 1px 2px rgb(0 0 0 / 40%);
+    --shadow-lg: 0 12px 32px rgb(0 0 0 / 60%);
+    color-scheme: dark;
+  }
+}
+
+/* Explicit dark theme (set by the theme toggle or the startup script) */
+:root[data-theme="dark"] {
+  --bg: #121214;
+  --surface: #1c1c21;
+  --surface-2: #26262c;
+  --border: #2f2f37;
+  --border-strong: #45454f;
+  --text: #ececf1;
+  --text-muted: #a9abb5;
+  --accent: var(--red-400);
+  --focus: var(--red-400);
+  --header-bg: #1c0505;
+  --error-text: #ff9a9a;
+  --error-bg: rgb(214 40 57 / 18%);
+  --warn-text: #ffd27a;
+  --warn-bg: rgb(245 181 46 / 14%);
+  --toast-bg: #ececf1;
+  --toast-text: #121214;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 60%);
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.0625rem;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+}
+
+main.container {
+  padding-top: 28px;
+  padding-bottom: 24px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Focus (keyboard users) ---------- */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 100;
+  padding: 8px 16px;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding-top: env(safe-area-inset-top);
+}
+
+.site-header :focus-visible {
+  outline-color: #ffffff;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+}
+
+.brand {
+  font-size: 1.125rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Theme toggle shows a moon in light mode and a sun in dark mode */
+.icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .icon-moon {
+  display: none;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+  background: var(--surface-2);
+}
+
+.btn-danger {
+  background: var(--red-600);
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background: var(--red-900);
+}
+
+.btn-danger-ghost {
+  background: transparent;
+  color: var(--error-text);
+  padding: 0 10px;
+}
+
+.btn-danger-ghost:hover {
+  background: var(--error-bg);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-2);
+}
+
+.btn-header {
+  background: transparent;
+  color: var(--header-text);
+  border-color: rgb(255 255 255 / 40%);
+}
+
+.btn-header:hover {
+  background: rgb(255 255 255 / 14%);
+}
+
+.btn-icon {
+  width: 44px;
+  padding: 0;
+}
+
+.btn-sm {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 0.875rem;
+}
+
+/* Text-style button, for quiet actions like "Show all" or "Download backup" */
+.link-btn {
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- Forms ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.required {
+  color: var(--accent);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 0;
+  border-color: var(--focus);
+}
+
+input[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--error-text);
+}
+
+.field-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.field-error {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--error-text);
+}
+
+/* Error message inside a dialog */
+.message {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--error-bg);
+  color: var(--error-text);
+  font-size: 0.9375rem;
+}
+
+.message:empty {
+  display: none;
+}
+
+/* ---------- Loading and error panels ---------- */
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  text-align: center;
+}
+
+.state-error {
+  color: var(--error-text);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Page heading ---------- */
+.app-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+#app-title {
+  font-size: clamp(1.375rem, 4vw, 2rem);
+  letter-spacing: -0.01em;
+}
+
+#job-count {
+  margin-top: 2px;
+  font-size: 0.9375rem;
+}
+
+/* Small phones: title on top, full-width "+ Add application" below it */
+@media (max-width: 519px) {
+  .app-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Dashboard summary tiles */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stat {
+  --status-bg: var(--text-muted); /* "Total" uses a neutral accent */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--status-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.stat-value {
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+@media (max-width: 359px) {
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Backup reminder: only shown when a backup is overdue */
+.reminder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  font-size: 0.9375rem;
+}
+
+.reminder p {
+  flex: 1 1 240px;
+}
+
+/* ---------- Welcome (no jobs yet) ---------- */
+.welcome {
+  max-width: 560px;
+  margin: 24px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.welcome-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.welcome .muted {
+  max-width: 34ch;
+}
+
+.welcome .btn {
+  margin-top: 8px;
+}
+
+/* ---------- Search and status chips ---------- */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 900px) {
+  .filters {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .search {
+    flex: 0 0 300px;
+  }
+}
+
+/* Phones: chips scroll sideways in one row. Larger screens: they wrap. */
+.chips {
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px;
+  padding: 2px 16px 4px;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .chips {
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Colored dot so each chip matches its status pill */
+.chip[data-status]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--status-bg);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 15%);
+}
+
+.chip:hover {
+  background: var(--surface-2);
+}
+
+.chip[aria-pressed="true"] {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+.chip-count {
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.filter-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Status colors ---------- */
+[data-status="wishlist"] { --status-bg: var(--wishlist-bg); --status-text: var(--wishlist-text); }
+[data-status="waiting"] { --status-bg: var(--waiting-bg); --status-text: var(--waiting-text); }
+[data-status="interviewing"] { --status-bg: var(--interviewing-bg); --status-text: var(--interviewing-text); }
+[data-status="accepted"] { --status-bg: var(--accepted-bg); --status-text: var(--accepted-text); }
+[data-status="rejected"] { --status-bg: var(--rejected-bg); --status-text: var(--rejected-text); }
+[data-status="withdrawn"] { --status-bg: var(--withdrawn-bg); --status-text: var(--withdrawn-text); }
+[data-status="ghosted"] { --status-bg: var(--ghosted-bg); --status-text: var(--ghosted-text); }
+
+/* ---------- Job table (laptops and desktops) ---------- */
+.table-wrap {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .table-wrap {
+    display: block;
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .job-list {
+    display: none !important;
+  }
+}
+
+.job-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.job-table th {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.th-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: -3px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.job-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+/* Light gridlines between columns, like a spreadsheet */
+.job-table th + th,
+.job-table td + td {
+  border-left: 1px solid var(--border);
+}
+
+.job-table tbody tr {
+  position: relative; /* anchor for the stretched company button */
+}
+
+.job-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+.cell-company {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  min-width: 140px;
+}
+
+.cell-role {
+  min-width: 160px;
+}
+
+.cell-salary,
+.cell-date,
+.cell-link {
+  white-space: nowrap;
+}
+
+.cell-sub {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.empty-cell {
+  color: var(--border-strong);
+}
+
+/* Status pills and links sit above the stretched company button so they stay clickable */
+.status-pill,
+.job-link {
+  position: relative;
+  z-index: 1;
+}
+
+/* "+ Add application" row at the bottom of the table */
+.job-table tfoot td {
+  padding: 0;
+  border-bottom: 0;
+}
+
+.add-row-btn {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.add-row-btn:hover {
+  background: var(--surface-2);
+  color: var(--accent);
+}
+
+/* ---------- Job cards (phones and tablets) ---------- */
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.job {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--status-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: border-color 0.15s;
+}
+
+.job:hover {
+  border-color: var(--border-strong);
+  border-left-color: var(--status-bg);
+}
+
+.job-main {
+  flex: 1 1 220px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The company name is a button stretched over the whole card, so the card opens on tap */
+.job-open {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.job-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
+
+.job-open:focus-visible {
+  outline: none;
+}
+
+.job-open:focus-visible::after {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.job-role {
+  color: var(--text);
+}
+
+.job-details,
+.job-date {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.stale-hint {
+  color: var(--warn-text);
+  font-weight: 600;
+}
+
+/* Status pill and job link sit above the stretched button so they stay clickable */
+.job-side {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 479px) {
+  .job-side {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+  }
+
+  .job-side .job-link {
+    margin-left: auto;
+  }
+}
+
+.job-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Status dropdown styled as a colored pill with a dot */
+.status-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--status-bg);
+  color: var(--status-text);
+}
+
+.status-pill::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  pointer-events: none;
+}
+
+.status-select {
+  width: auto;
+  min-height: 34px;
+  padding: 4px 30px 4px 26px;
+  border: 0;
+  border-radius: 999px;
+  background-color: transparent;
+  color: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* Work setup as a solid block (square corners, so it doesn't look like a status) */
+.setup-block {
+  display: inline-block;
+  min-width: 76px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.setup-block[data-setup="onsite"] { background: var(--onsite-bg); color: var(--onsite-text); }
+.setup-block[data-setup="hybrid"] { background: var(--hybrid-bg); color: var(--hybrid-text); }
+.setup-block[data-setup="remote"] { background: var(--remote-bg); color: var(--remote-text); }
+
+.status-select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ---------- Footer (backup) ---------- */
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 24px;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.app-footer .link-btn {
+  font-size: 0.875rem;
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 50;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--toast-bg);
+  color: var(--toast-text);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.9375rem;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.toast[data-variant="error"] {
+  background: var(--red-600);
+  color: #ffffff;
+}
+
+.toast-show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- Dialogs ---------- */
+.dialog {
+  width: min(560px, calc(100% - 24px));
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+
+.dialog-small {
+  width: min(420px, calc(100% - 24px));
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 55%);
+}
+
+.dialog h2 {
+  font-size: 1.25rem;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 560px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .field-full {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-more summary {
+  padding: 4px 0;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-more[open] summary {
+  margin-bottom: 12px;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+
+  .btn,
+  .job,
+  .toast {
+    transition: none;
+  }
+}
